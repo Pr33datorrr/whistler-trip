@@ -5,49 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Surrey ⇄ Whistler Group Trip Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @media print {
+        body {
+          background: #fff;
+          color: #000;
+        }
+        .no-print {
+          display: none !important;
+        }
+        .print-only {
+          display: block !important;
+        }
+        .print-card {
+          border: 1px solid #d1d5db;
+          padding: 1rem;
+          margin-bottom: 0.75rem;
+          border-radius: 0.75rem;
+        }
+      }
+    </style>
   </head>
   <body class="bg-slate-950 text-slate-100">
     <div class="min-h-screen">
-      <header class="sticky top-0 z-10 bg-slate-950/90 backdrop-blur">
+      <header class="sticky top-0 z-10 bg-slate-950/90 backdrop-blur no-print">
         <div class="mx-auto max-w-3xl px-4 py-5">
           <p class="text-xs uppercase tracking-[0.25em] text-slate-400">Group Trip Dashboard</p>
           <h1 class="mt-2 text-2xl font-semibold">🏔️ Surrey ⇄ Whistler: Views, Vibes & Veggie Feasts</h1>
           <p class="mt-2 text-sm text-slate-300">Feb 17–18 (Tue–Wed) • Group of 4 • Strict Vegetarian (No Egg)</p>
+          <div class="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+            <div class="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-slate-400">
+              <span>Trip Progress</span>
+              <span id="progressText">0/0</span>
+            </div>
+            <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-800">
+              <div id="progressBar" class="h-full rounded-full bg-emerald-400" style="width: 0%"></div>
+            </div>
+            <div class="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-300">
+              <button id="jumpNext" class="rounded-full border border-slate-700 px-3 py-1">Jump to next stop</button>
+              <button id="undoLast" class="rounded-full border border-slate-700 px-3 py-1">Undo last</button>
+              <button id="printCheatSheet" class="rounded-full border border-slate-700 px-3 py-1">Print / Export cheat sheet</button>
+            </div>
+          </div>
         </div>
       </header>
 
       <main class="mx-auto max-w-3xl px-4 pb-16">
-        <section class="mt-6 rounded-3xl border border-slate-800 bg-slate-900/60 p-5">
+        <section class="mt-6 rounded-3xl border border-slate-800 bg-slate-900/60 p-5 no-print">
           <h2 class="text-lg font-semibold">⚠️ Non-Negotiables</h2>
           <ul class="mt-3 space-y-2 text-sm text-slate-200">
-            <li class="flex items-start gap-2"><span>✅</span><span>M+S or Mountain Snowflake tires required. Police checks are common.</span></li>
-            <li class="flex items-start gap-2"><span>🥗</span><span>Every food stop is vetted for strict vegetarian (No Egg).</span></li>
-            <li class="flex items-start gap-2"><span>🌉</span><span>Bridge Logic: Leave at 7:00 AM; stop in Squamish on return to miss rush hour.</span></li>
+            <li class="flex items-start gap-2"><span aria-hidden="true">✅</span><span>M+S or Mountain Snowflake tires required. Police checks are common.</span></li>
+            <li class="flex items-start gap-2"><span aria-hidden="true">🥗</span><span>Every food stop is vetted for strict vegetarian (No Egg).</span></li>
+            <li class="flex items-start gap-2"><span aria-hidden="true">🌉</span><span>Bridge Logic: Leave at 7:00 AM; stop in Squamish on return to miss rush hour.</span></li>
           </ul>
+          <div class="mt-4 grid gap-2 sm:grid-cols-2">
+            <a class="rounded-2xl bg-slate-800 px-4 py-3 text-center text-sm font-semibold" href="https://www2.gov.bc.ca/gov/content/transportation/driving-and-cycling/driving/conditions-and-safety/winter-driving" target="_blank" rel="noopener">Tire requirements & highway info</a>
+            <a class="rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-center text-sm font-semibold" href="https://www.google.com/maps/search/?api=1&query=Whistler%20Day%20Lot%204" target="_blank" rel="noopener">Whistler Day Lot 4 location</a>
+          </div>
         </section>
 
-        <section class="mt-6 rounded-3xl border border-slate-800 bg-slate-900/60 p-5">
+        <section class="mt-6 rounded-3xl border border-slate-800 bg-slate-900/60 p-5 no-print">
           <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 class="text-lg font-semibold">📍 Where are we?</h2>
               <p class="text-sm text-slate-300">Tap to get your coordinates and distance to the next scheduled stop.</p>
             </div>
-            <button id="findUsBtn" class="rounded-full bg-emerald-400 px-5 py-3 text-sm font-semibold text-emerald-950 shadow-lg shadow-emerald-500/30">Find Us</button>
+            <button id="findUsBtn" class="rounded-full bg-emerald-400 px-5 py-3 text-sm font-semibold text-emerald-950 shadow-lg shadow-emerald-500/30" aria-label="Find my location">Find Us</button>
           </div>
           <div id="locationOutput" class="mt-4 rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-200">
             <p>Waiting for location…</p>
           </div>
         </section>
 
-        <section class="mt-8">
-          <div class="flex items-center justify-between">
+        <section class="mt-8 no-print">
+          <div class="flex flex-wrap items-center justify-between gap-2">
             <h2 class="text-xl font-semibold">📅 Timeline</h2>
             <button id="resetProgress" class="text-xs text-slate-400 underline">Reset progress</button>
           </div>
           <div id="timeline" class="mt-4 space-y-8"></div>
         </section>
 
-        <section class="mt-10 rounded-3xl border border-slate-800 bg-slate-900/60 p-5">
+        <section class="mt-10 rounded-3xl border border-slate-800 bg-slate-900/60 p-5 no-print">
           <h2 class="text-lg font-semibold">💰 Budget Breakdown (Per Person)</h2>
           <ul class="mt-3 space-y-2 text-sm text-slate-200">
             <li>Gas: ~$20–$30</li>
@@ -58,8 +96,11 @@
           </ul>
         </section>
 
-        <section class="mt-10 rounded-3xl border border-slate-800 bg-slate-900/60 p-5">
-          <h2 class="text-lg font-semibold">🚫 No Egg Cheat Sheet</h2>
+        <section class="mt-10 rounded-3xl border border-slate-800 bg-slate-900/60 p-5 no-print" id="cheatSheetSection">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h2 class="text-lg font-semibold">🚫 No Egg Cheat Sheet</h2>
+            <button id="printInline" class="rounded-full border border-slate-700 px-3 py-1 text-xs">Print this list</button>
+          </div>
           <div class="mt-4 grid gap-3 text-sm text-slate-200">
             <div class="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
               <p class="font-semibold">Tim Hortons</p>
@@ -84,7 +125,42 @@
           </div>
         </section>
 
-        
+        <section class="mt-10 rounded-3xl border border-slate-800 bg-slate-900/60 p-5 no-print">
+          <h2 class="text-lg font-semibold">🚀 Publish on GitHub Pages (Free Hosting)</h2>
+          <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm text-slate-200">
+            <li>Create a new GitHub repository and upload this <span class="font-semibold">index.html</span> file.</li>
+            <li>Go to <span class="font-semibold">Settings → Pages</span>.</li>
+            <li>Under <span class="font-semibold">Branch</span>, choose <span class="font-semibold">main</span> and <span class="font-semibold">/ (root)</span>, then save.</li>
+            <li>Wait a minute for GitHub Pages to publish; your site link will appear at the top of the Pages settings.</li>
+          </ol>
+        </section>
+
+        <section class="print-only hidden" id="printSheet">
+          <h2 class="text-xl font-semibold">No Egg Cheat Sheet</h2>
+          <p class="mt-2 text-sm">Quick reference for the group. Printed from the dashboard.</p>
+          <div class="mt-4">
+            <div class="print-card">
+              <p class="font-semibold">Tim Hortons</p>
+              <p>Bagel w/ Peanut Butter OR Oatmeal (avoid muffins/croissants).</p>
+            </div>
+            <div class="print-card">
+              <p class="font-semibold">Sunny Chibas</p>
+              <p>Vegan Tacos or Burritos (Beans, Guac, Salsa).</p>
+            </div>
+            <div class="print-card">
+              <p class="font-semibold">Indian Masala</p>
+              <p>Chana Masala, Dal, Aloo Gobi + Tandoori Roti.</p>
+            </div>
+            <div class="print-card">
+              <p class="font-semibold">El Furniture Warehouse</p>
+              <p>General Tao Bowl OR Veggie Burger (Lettuce Wrap, No Mayo).</p>
+            </div>
+            <div class="print-card">
+              <p class="font-semibold">Cloudburst Cafe</p>
+              <p>Quinoa Veggie Burger (Fully Vegan/Safe).</p>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
 
@@ -99,7 +175,6 @@
           summary: "Depart from Surrey early to beat bridge traffic and catch sunrise views.",
           notes: [
             "Bridge Logic: leave at 7:00 AM to miss the rush.",
-            "Coffee Stop: Tim Hortons.",
           ],
           coords: { lat: 49.1044, lng: -122.8011 },
         },
@@ -110,11 +185,14 @@
           title: "Tim Hortons (Coffee Stop)",
           type: "food",
           summary: "Quick fuel before the scenery begins.",
+          notes: [
+            "Branch: Tim Hortons, 17670 64 Ave (update if you prefer a different branch).",
+          ],
           eggFree: [
             "Bagel with Peanut Butter (or Cream Cheese).",
             "Oatmeal.",
           ],
-          coords: { lat: 49.1892, lng: -122.8457 },
+          coords: { lat: 49.1182, lng: -122.7051 },
         },
         {
           id: "d1-porteau",
@@ -164,13 +242,24 @@
           day: "Day 1 • Tuesday",
           time: "Afternoon",
           title: "Choose Your Own Adventure",
-          type: "activity",
+          type: "option-group",
           summary: "Pick based on energy levels.",
-          notes: [
-            "Option A: Alice Lake → Stump Lake loop (quiet forest vibes).",
-            "Option B: Tantalus Lookout (roadside glacier views).",
+          options: [
+            {
+              id: "d1-alice",
+              title: "Option A: Alice Lake (Stump Lake Loop)",
+              summary: "Nature walk with mossy, quiet forest vibes.",
+              notes: ["Short loop, calm pace."],
+              coords: { lat: 49.7647, lng: -123.1441 },
+            },
+            {
+              id: "d1-tantalus",
+              title: "Option B: Tantalus Lookout",
+              summary: "Roadside glacier views with no hike required.",
+              notes: ["Drive 15 minutes north for quick photo stop."],
+              coords: { lat: 49.7944, lng: -123.1619 },
+            },
           ],
-          coords: { lat: 49.7644, lng: -123.1532 },
         },
         {
           id: "d1-dinner",
@@ -190,13 +279,24 @@
           day: "Day 1 • Tuesday",
           time: "Evening",
           title: "Base Camp Lodging",
-          type: "logistics",
+          type: "option-group",
           summary: "Pick the vibe for the night.",
-          notes: [
-            "Option 1 (Party): Crash Hotel Party Room.",
-            "Option 2 (Chill/Budget): Squamish Adventure Inn Family Room (kitchen for late-night chai).",
+          options: [
+            {
+              id: "d1-crash",
+              title: "Option 1: Crash Hotel Party Room",
+              summary: "Party vibes, central location.",
+              bookingUrl: "https://squamish.crashhotel.com/rooms/party-room-2-queen-beds-2-bunk-beds/",
+              coords: { lat: 49.7017, lng: -123.1556 },
+            },
+            {
+              id: "d1-inn",
+              title: "Option 2: Squamish Adventure Inn Family Room",
+              summary: "Chill budget stay with kitchen for late-night chai.",
+              bookingUrl: "https://squamishhostel.com/rooms/family-room/",
+              coords: { lat: 49.6999, lng: -123.1571 },
+            },
           ],
-          coords: { lat: 49.7017, lng: -123.1556 },
         },
         {
           id: "d2-start",
@@ -248,6 +348,15 @@
           coords: { lat: 50.0469, lng: -123.0788 },
         },
         {
+          id: "d2-bridge-logic",
+          day: "Day 2 • Wednesday",
+          time: "Reminder",
+          title: "🌉 Bridge Logic Reminder",
+          type: "reminder",
+          summary: "Pause in Squamish on the way back to avoid the afternoon traffic wall.",
+          notes: ["Plan for a Squamish stop before driving home."],
+        },
+        {
           id: "d2-traffic",
           day: "Day 2 • Wednesday",
           time: "Late Afternoon",
@@ -267,30 +376,85 @@
       const findUsBtn = document.getElementById("findUsBtn");
       const locationOutput = document.getElementById("locationOutput");
       const resetProgressBtn = document.getElementById("resetProgress");
-      const storageKey = "trip-progress";
+      const undoLastBtn = document.getElementById("undoLast");
+      const jumpNextBtn = document.getElementById("jumpNext");
+      const progressText = document.getElementById("progressText");
+      const progressBar = document.getElementById("progressBar");
+      const printCheatSheet = document.getElementById("printCheatSheet");
+      const printInline = document.getElementById("printInline");
+      const storageKey = "trip-progress-v2";
 
-      const groupByDay = itinerary.reduce((acc, item) => {
-        acc[item.day] = acc[item.day] || [];
-        acc[item.day].push(item);
-        return acc;
-      }, {});
-
-      const loadProgress = () => {
+      const loadState = () => {
         try {
           const saved = JSON.parse(localStorage.getItem(storageKey));
-          return saved && typeof saved.currentIndex === "number" ? saved.currentIndex : 0;
+          if (!saved) return { completed: {}, selectedOptions: {}, history: [] };
+          return {
+            completed: saved.completed || {},
+            selectedOptions: saved.selectedOptions || {},
+            history: saved.history || [],
+          };
         } catch (error) {
-          return 0;
+          return { completed: {}, selectedOptions: {}, history: [] };
         }
       };
 
-      const saveProgress = (index) => {
-        localStorage.setItem(storageKey, JSON.stringify({ currentIndex: index }));
+      const saveState = (state) => {
+        localStorage.setItem(storageKey, JSON.stringify(state));
       };
 
-      let currentIndex = loadProgress();
+      let state = loadState();
 
-      const getNextStop = () => itinerary.find((item, index) => index >= currentIndex && item.coords);
+      const getDayKey = (day) => day.replace(/\s+/g, "-").toLowerCase();
+
+      const getSelectedOptionId = (groupId) => state.selectedOptions[groupId];
+
+      const setSelectedOption = (groupId, optionId) => {
+        state.selectedOptions[groupId] = optionId;
+        saveState(state);
+      };
+
+      const clearSelectedOption = (groupId) => {
+        delete state.selectedOptions[groupId];
+        saveState(state);
+      };
+
+      const getCompletionSet = (day) => {
+        const key = getDayKey(day);
+        return new Set(state.completed[key] || []);
+      };
+
+      const updateCompletionSet = (day, set) => {
+        const key = getDayKey(day);
+        state.completed[key] = Array.from(set);
+        saveState(state);
+      };
+
+      const getRenderableStops = () => itinerary.map((stop) => stop);
+
+      const getProgressStops = () => {
+        return itinerary.map((stop) => {
+          if (stop.type === "option-group") {
+            const selectedId = getSelectedOptionId(stop.id);
+            const selectedOption = stop.options.find((option) => option.id === selectedId);
+            return selectedOption
+              ? {
+                  ...selectedOption,
+                  groupId: stop.id,
+                  day: stop.day,
+                  time: stop.time,
+                  type: "option",
+                  summary: selectedOption.summary,
+                  title: selectedOption.title,
+                }
+              : { ...stop };
+          }
+          return stop;
+        });
+      };
+
+      const getAllCompletionIds = () => {
+        return new Set(Object.values(state.completed).flat());
+      };
 
       const formatDistance = (km) => {
         if (km < 1) return `${Math.round(km * 1000)} m`;
@@ -311,16 +475,81 @@
         return radius * c;
       };
 
-      const buildStopCard = (stop, index) => {
-        const isComplete = index < currentIndex;
+      const buildMapLinks = (coords, label) => {
+        const destination = `${coords.lat},${coords.lng}`;
+        return {
+          navigate: `https://www.google.com/maps/dir/?api=1&destination=${destination}`,
+          reviews: `https://www.google.com/maps/search/?api=1&query=${destination}`,
+          apple: `https://maps.apple.com/?ll=${destination}&q=${encodeURIComponent(label)}`,
+          share: `https://www.google.com/maps/search/?api=1&query=${destination}`,
+        };
+      };
+
+      const renderActionButtons = (stop) => {
+        if (!stop.coords) return "";
+        const links = buildMapLinks(stop.coords, stop.title);
+        const phoneLink = stop.phone ? `tel:${stop.phone}` : null;
+        return `
+          <div class="mt-4 grid gap-2 sm:grid-cols-2">
+            <a class="rounded-2xl bg-slate-800 px-4 py-3 text-center text-sm font-semibold" href="${links.navigate}" target="_blank" rel="noopener">Navigate</a>
+            <a class="rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-center text-sm font-semibold" href="${links.reviews}" target="_blank" rel="noopener">Reviews/Traffic</a>
+            <a class="rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-center text-sm font-semibold" href="${links.apple}" target="_blank" rel="noopener">Open in Apple Maps</a>
+            <button class="rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-center text-sm font-semibold" data-share="${links.share}" aria-label="Share stop">Share stop</button>
+            <a class="rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-center text-sm font-semibold ${phoneLink ? "" : "opacity-50"}" href="${phoneLink || "#"}" ${phoneLink ? "" : "aria-disabled=\"true\""}>Call</a>
+          </div>
+        `;
+      };
+
+      const handleShare = async (url, title) => {
+        if (navigator.share) {
+          try {
+            await navigator.share({ title, url });
+            return;
+          } catch (error) {
+            return;
+          }
+        }
+
+        try {
+          await navigator.clipboard.writeText(url);
+          alert("Link copied to clipboard.");
+        } catch (error) {
+          alert("Unable to share. Copy this link: " + url);
+        }
+      };
+
+      const renderEggFree = (stop) => {
+        if (!stop.eggFree) return "";
+        return `
+          <div class="mt-4 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-100">
+            <div class="flex items-center gap-2 font-semibold">
+              <span aria-hidden="true">🌿</span>
+              <span>Egg-Free Order</span>
+            </div>
+            <ul class="mt-2 space-y-1">
+              ${stop.eggFree.map((item) => `<li>${item}</li>`).join("")}
+            </ul>
+          </div>
+        `;
+      };
+
+      const buildStopCard = (stop) => {
+        const completionSet = getCompletionSet(stop.day);
+        const isComplete = completionSet.has(stop.id);
         const card = document.createElement("article");
-        card.className = `rounded-3xl border ${isComplete ? "border-emerald-500/40 bg-emerald-500/10" : "border-slate-800 bg-slate-900/60"} p-5`;
+        const borderClass = isComplete ? "border-emerald-500/40 bg-emerald-500/10" : "border-slate-800 bg-slate-900/60";
 
         const badgeClass = {
           food: "bg-amber-500/15 text-amber-300",
           activity: "bg-sky-500/15 text-sky-300",
           logistics: "bg-rose-500/15 text-rose-300",
+          reminder: "bg-violet-500/15 text-violet-200",
+          option: "bg-emerald-500/15 text-emerald-200",
+          "option-group": "bg-emerald-500/15 text-emerald-200",
         };
+
+        card.className = `rounded-3xl border ${borderClass} p-5`;
+        card.id = `stop-${stop.id}`;
 
         card.innerHTML = `
           <div class="flex items-start justify-between gap-4">
@@ -328,7 +557,7 @@
               <p class="text-xs uppercase tracking-[0.2em] text-slate-400">${stop.time}</p>
               <h3 class="mt-1 text-lg font-semibold">${stop.title}</h3>
             </div>
-            <span class="rounded-full px-3 py-1 text-xs font-semibold ${badgeClass[stop.type] || "bg-slate-700/40 text-slate-200"}">${stop.type}</span>
+            <span class="rounded-full px-3 py-1 text-xs font-semibold ${badgeClass[stop.type] || "bg-slate-700/40 text-slate-200"}">${stop.type.replace("-", " ")}</span>
           </div>
           <p class="mt-3 text-sm text-slate-200">${stop.summary}</p>
         `;
@@ -345,60 +574,140 @@
           card.appendChild(notes);
         }
 
-        if (stop.eggFree) {
-          const alert = document.createElement("div");
-          alert.className = "mt-4 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-100";
-          alert.innerHTML = `
-            <div class="flex items-center gap-2 font-semibold">
-              <span>🌿</span>
-              <span>Egg-Free Order</span>
-            </div>
-          `;
-          const list = document.createElement("ul");
-          list.className = "mt-2 space-y-1";
-          stop.eggFree.forEach((item) => {
-            const li = document.createElement("li");
-            li.textContent = item;
-            list.appendChild(li);
-          });
-          alert.appendChild(list);
-          card.appendChild(alert);
+        if (stop.type === "option-group") {
+          const selectedId = getSelectedOptionId(stop.id);
+          const selectedOption = stop.options.find((option) => option.id === selectedId);
+
+          const optionsWrap = document.createElement("div");
+          optionsWrap.className = "mt-4 space-y-3";
+
+          if (selectedOption) {
+            const selectedCard = document.createElement("div");
+            selectedCard.className = "rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-100";
+            selectedCard.innerHTML = `
+              <p class="text-xs uppercase tracking-[0.2em] text-emerald-200">Selected Option</p>
+              <p class="mt-1 text-base font-semibold text-white">${selectedOption.title}</p>
+              <p class="mt-1 text-sm text-emerald-100">${selectedOption.summary}</p>
+            `;
+            if (selectedOption.notes) {
+              const noteList = document.createElement("ul");
+              noteList.className = "mt-2 space-y-1";
+              selectedOption.notes.forEach((note) => {
+                const li = document.createElement("li");
+                li.textContent = note;
+                noteList.appendChild(li);
+              });
+              selectedCard.appendChild(noteList);
+            }
+            if (selectedOption.bookingUrl) {
+              const link = document.createElement("a");
+              link.className = "mt-3 inline-flex rounded-full bg-emerald-300 px-4 py-2 text-xs font-semibold text-emerald-950";
+              link.href = selectedOption.bookingUrl;
+              link.target = "_blank";
+              link.rel = "noopener";
+              link.textContent = "Book / Details";
+              selectedCard.appendChild(link);
+            }
+            if (selectedOption.coords) {
+              selectedCard.insertAdjacentHTML("beforeend", renderActionButtons(selectedOption));
+            }
+
+            const changeBtn = document.createElement("button");
+            changeBtn.className = "mt-3 rounded-full border border-emerald-300/60 px-4 py-2 text-xs font-semibold text-emerald-100";
+            changeBtn.textContent = "Change option";
+            changeBtn.addEventListener("click", () => {
+              clearSelectedOption(stop.id);
+              renderTimeline();
+            });
+            selectedCard.appendChild(changeBtn);
+            optionsWrap.appendChild(selectedCard);
+          } else {
+            stop.options.forEach((option) => {
+              const optionCard = document.createElement("div");
+              optionCard.className = "rounded-2xl border border-slate-800 bg-slate-950/70 p-4 text-sm text-slate-200";
+              optionCard.innerHTML = `
+                <p class="font-semibold">${option.title}</p>
+                <p class="mt-1">${option.summary}</p>
+              `;
+              if (option.notes) {
+                const noteList = document.createElement("ul");
+                noteList.className = "mt-2 space-y-1 text-xs text-slate-300";
+                option.notes.forEach((note) => {
+                  const li = document.createElement("li");
+                  li.textContent = note;
+                  noteList.appendChild(li);
+                });
+                optionCard.appendChild(noteList);
+              }
+              if (option.bookingUrl) {
+                const link = document.createElement("a");
+                link.className = "mt-3 inline-flex rounded-full bg-slate-200 px-4 py-2 text-xs font-semibold text-slate-900";
+                link.href = option.bookingUrl;
+                link.target = "_blank";
+                link.rel = "noopener";
+                link.textContent = "Book / Details";
+                optionCard.appendChild(link);
+              }
+              if (option.coords) {
+                optionCard.insertAdjacentHTML("beforeend", renderActionButtons(option));
+              }
+              const selectBtn = document.createElement("button");
+              selectBtn.className = "mt-3 w-full rounded-full bg-emerald-400 px-4 py-2 text-xs font-semibold text-emerald-950";
+              selectBtn.textContent = "Select this option";
+              selectBtn.addEventListener("click", () => {
+                setSelectedOption(stop.id, option.id);
+                renderTimeline();
+              });
+              optionCard.appendChild(selectBtn);
+              optionsWrap.appendChild(optionCard);
+            });
+          }
+          card.appendChild(optionsWrap);
         }
 
-        if (stop.coords) {
-          const actions = document.createElement("div");
-          actions.className = "mt-4 grid gap-2 sm:grid-cols-2";
-          const destination = `${stop.coords.lat},${stop.coords.lng}`;
-          actions.innerHTML = `
-            <a class="rounded-2xl bg-slate-800 px-4 py-3 text-center text-sm font-semibold" href="https://www.google.com/maps/dir/?api=1&destination=${destination}" target="_blank" rel="noopener">Navigate</a>
-            <a class="rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-center text-sm font-semibold" href="https://www.google.com/maps/search/?api=1&query=${destination}" target="_blank" rel="noopener">Reviews/Traffic</a>
-          `;
-          card.appendChild(actions);
+        if (stop.eggFree) {
+          card.insertAdjacentHTML("beforeend", renderEggFree(stop));
+        }
+
+        if (stop.coords && stop.type !== "option-group") {
+          card.insertAdjacentHTML("beforeend", renderActionButtons(stop));
         }
 
         const progressWrap = document.createElement("div");
-        progressWrap.className = "mt-4 flex items-center justify-between text-xs text-slate-400";
-        progressWrap.innerHTML = `<span>${isComplete ? "✅ Completed" : "Next up"}</span>`;
+        progressWrap.className = "mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400";
+        progressWrap.innerHTML = `<span>${isComplete ? "✅ Done" : "Next up"}</span>`;
 
-        if (!isComplete) {
-          const doneBtn = document.createElement("button");
-          doneBtn.className = "rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-200";
-          doneBtn.textContent = "Mark done";
-          doneBtn.addEventListener("click", () => {
-            currentIndex = Math.min(currentIndex + 1, itinerary.length);
-            saveProgress(currentIndex);
-            renderTimeline();
-          });
-          progressWrap.appendChild(doneBtn);
-        }
+        const toggleBtn = document.createElement("button");
+        toggleBtn.className = "rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-200";
+        toggleBtn.textContent = isComplete ? "Mark not done" : "Mark done";
+        toggleBtn.addEventListener("click", () => {
+          const updatedSet = getCompletionSet(stop.day);
+          if (updatedSet.has(stop.id)) {
+            updatedSet.delete(stop.id);
+          } else {
+            updatedSet.add(stop.id);
+            state.history.push({ day: stop.day, id: stop.id });
+          }
+          updateCompletionSet(stop.day, updatedSet);
+          saveState(state);
+          renderTimeline();
+        });
+        progressWrap.appendChild(toggleBtn);
 
         card.appendChild(progressWrap);
         return card;
       };
 
       const renderTimeline = () => {
+        const renderStops = getRenderableStops();
+        const grouped = renderStops.reduce((acc, item) => {
+          acc[item.day] = acc[item.day] || [];
+          acc[item.day].push(item);
+          return acc;
+        }, {});
+
         timelineEl.innerHTML = "";
-        Object.entries(groupByDay).forEach(([day, stops]) => {
+        Object.entries(grouped).forEach(([day, stops]) => {
           const section = document.createElement("section");
           section.className = "space-y-4";
           const heading = document.createElement("h3");
@@ -406,10 +715,23 @@
           heading.textContent = day;
           section.appendChild(heading);
           stops.forEach((stop) => {
-            const index = itinerary.findIndex((item) => item.id === stop.id);
-            section.appendChild(buildStopCard(stop, index));
+            section.appendChild(buildStopCard(stop));
           });
           timelineEl.appendChild(section);
+        });
+
+        const progressStops = getProgressStops();
+        const completionSet = getAllCompletionIds();
+        const relevantIds = new Set(progressStops.map((stop) => stop.id));
+        const completedCount = Array.from(completionSet).filter((id) => relevantIds.has(id)).length;
+        const totalCount = progressStops.length;
+        progressText.textContent = `${completedCount}/${totalCount}`;
+        progressBar.style.width = totalCount ? `${Math.round((completedCount / totalCount) * 100)}%` : "0%";
+
+        document.querySelectorAll("[data-share]").forEach((button) => {
+          button.addEventListener("click", () => {
+            handleShare(button.dataset.share, "Trip stop");
+          });
         });
       };
 
@@ -417,9 +739,15 @@
         locationOutput.innerHTML = content;
       };
 
+      const getNextStop = () => {
+        const progressStops = getProgressStops();
+        const completionSet = getAllCompletionIds();
+        return progressStops.find((stop) => !completionSet.has(stop.id));
+      };
+
       const handleFindUs = () => {
         if (!navigator.geolocation) {
-          updateLocationOutput("<p>Your browser does not support geolocation.</p>");
+          updateLocationOutput("<p>Your browser does not support geolocation. Open Maps and search the stop name instead.</p>");
           return;
         }
 
@@ -429,13 +757,21 @@
             const { latitude, longitude } = position.coords;
             const nextStop = getNextStop();
             let distanceBlock = "";
-            if (nextStop) {
+            if (nextStop && nextStop.coords) {
               const distanceKm = getDistanceKm(latitude, longitude, nextStop.coords.lat, nextStop.coords.lng);
               distanceBlock = `
                 <div class="mt-2 rounded-xl border border-slate-800 bg-slate-950/70 p-3">
                   <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Next Stop</p>
                   <p class="text-sm font-semibold">${nextStop.title}</p>
                   <p class="text-sm text-slate-300">~${formatDistance(distanceKm)} away</p>
+                </div>
+              `;
+            } else if (nextStop) {
+              distanceBlock = `
+                <div class="mt-2 rounded-xl border border-slate-800 bg-slate-950/70 p-3">
+                  <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Next Stop</p>
+                  <p class="text-sm font-semibold">${nextStop.title}</p>
+                  <p class="text-sm text-slate-300">Select an option to get distance.</p>
                 </div>
               `;
             }
@@ -446,7 +782,7 @@
             `);
           },
           () => {
-            updateLocationOutput("<p>Unable to access location. Please allow location access.</p>");
+            updateLocationOutput("<p>Unable to access location. Allow location access or open Maps and search the stop name.</p>");
           },
           { enableHighAccuracy: true, timeout: 10000 }
         );
@@ -455,10 +791,40 @@
       findUsBtn.addEventListener("click", handleFindUs);
 
       resetProgressBtn.addEventListener("click", () => {
-        currentIndex = 0;
-        saveProgress(currentIndex);
+        state.completed = {};
+        state.history = [];
+        saveState(state);
         renderTimeline();
       });
+
+      undoLastBtn.addEventListener("click", () => {
+        const last = state.history.pop();
+        if (!last) return;
+        const updatedSet = getCompletionSet(last.day);
+        updatedSet.delete(last.id);
+        updateCompletionSet(last.day, updatedSet);
+        saveState(state);
+        renderTimeline();
+      });
+
+      jumpNextBtn.addEventListener("click", () => {
+        const nextStop = getNextStop();
+        if (!nextStop) return;
+        const el = document.getElementById(`stop-${nextStop.id}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+
+      const handlePrint = () => {
+        const printSheet = document.getElementById("printSheet");
+        printSheet.classList.remove("hidden");
+        window.print();
+        printSheet.classList.add("hidden");
+      };
+
+      printCheatSheet.addEventListener("click", handlePrint);
+      printInline.addEventListener("click", handlePrint);
 
       renderTimeline();
     </script>
