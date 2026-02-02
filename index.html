@@ -1,411 +1,466 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sea-to-Sky: Views, Vibes & Veggie Feasts</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Surrey ⇄ Whistler Group Trip Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'mountain-dark': '#1e293b',
-                        'forest-green': '#166534',
-                        'sky-blue': '#0ea5e9',
-                        'alert-red': '#ef4444',
-                        'safe-green': '#dcfce7',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Custom scrollbar hide for clean UI */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    </style>
-</head>
-<body class="bg-slate-50 text-slate-800 pb-20">
+  </head>
+  <body class="bg-slate-950 text-slate-100">
+    <div class="min-h-screen">
+      <header class="sticky top-0 z-10 bg-slate-950/90 backdrop-blur">
+        <div class="mx-auto max-w-3xl px-4 py-5">
+          <p class="text-xs uppercase tracking-[0.25em] text-slate-400">Group Trip Dashboard</p>
+          <h1 class="mt-2 text-2xl font-semibold">🏔️ Surrey ⇄ Whistler: Views, Vibes & Veggie Feasts</h1>
+          <p class="mt-2 text-sm text-slate-300">Feb 17–18 (Tue–Wed) • Group of 4 • Strict Vegetarian (No Egg)</p>
+        </div>
+      </header>
 
-    <header class="sticky top-0 z-50 bg-mountain-dark text-white shadow-lg">
-        <div class="px-4 py-3 flex justify-between items-center max-w-2xl mx-auto">
+      <main class="mx-auto max-w-3xl px-4 pb-16">
+        <section class="mt-6 rounded-3xl border border-slate-800 bg-slate-900/60 p-5">
+          <h2 class="text-lg font-semibold">⚠️ Non-Negotiables</h2>
+          <ul class="mt-3 space-y-2 text-sm text-slate-200">
+            <li class="flex items-start gap-2"><span>✅</span><span>M+S or Mountain Snowflake tires required. Police checks are common.</span></li>
+            <li class="flex items-start gap-2"><span>🥗</span><span>Every food stop is vetted for strict vegetarian (No Egg).</span></li>
+            <li class="flex items-start gap-2"><span>🌉</span><span>Bridge Logic: Leave at 7:00 AM; stop in Squamish on return to miss rush hour.</span></li>
+          </ul>
+        </section>
+
+        <section class="mt-6 rounded-3xl border border-slate-800 bg-slate-900/60 p-5">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="font-bold text-lg">Sea-to-Sky Trip</h1>
-                <p class="text-xs text-gray-300">Surrey ⇄ Whistler</p>
+              <h2 class="text-lg font-semibold">📍 Where are we?</h2>
+              <p class="text-sm text-slate-300">Tap to get your coordinates and distance to the next scheduled stop.</p>
             </div>
-            <button onclick="findNearestStop()" class="bg-sky-blue hover:bg-sky-600 text-white text-xs font-bold py-2 px-3 rounded-full flex items-center transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Locate Me
-            </button>
-        </div>
+            <button id="findUsBtn" class="rounded-full bg-emerald-400 px-5 py-3 text-sm font-semibold text-emerald-950 shadow-lg shadow-emerald-500/30">Find Us</button>
+          </div>
+          <div id="locationOutput" class="mt-4 rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-200">
+            <p>Waiting for location…</p>
+          </div>
+        </section>
+
+        <section class="mt-8">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-semibold">📅 Timeline</h2>
+            <button id="resetProgress" class="text-xs text-slate-400 underline">Reset progress</button>
+          </div>
+          <div id="timeline" class="mt-4 space-y-8"></div>
+        </section>
+
+        <section class="mt-10 rounded-3xl border border-slate-800 bg-slate-900/60 p-5">
+          <h2 class="text-lg font-semibold">💰 Budget Breakdown (Per Person)</h2>
+          <ul class="mt-3 space-y-2 text-sm text-slate-200">
+            <li>Gas: ~$20–$30</li>
+            <li>Lodging: ~$100–$125 (shared room)</li>
+            <li>Food: ~$80–$100 (family-style Indian dinners save money)</li>
+            <li>Parking: ~$5 (split Whistler lot fee)</li>
+            <li class="font-semibold">Total Target: $200–$250 CAD per person</li>
+          </ul>
+        </section>
+
+        <section class="mt-10 rounded-3xl border border-slate-800 bg-slate-900/60 p-5">
+          <h2 class="text-lg font-semibold">🚫 No Egg Cheat Sheet</h2>
+          <div class="mt-4 grid gap-3 text-sm text-slate-200">
+            <div class="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+              <p class="font-semibold">Tim Hortons</p>
+              <p>Bagel w/ Peanut Butter OR Oatmeal (avoid muffins/croissants).</p>
+            </div>
+            <div class="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+              <p class="font-semibold">Sunny Chibas</p>
+              <p>Vegan Tacos or Burritos (Beans, Guac, Salsa).</p>
+            </div>
+            <div class="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+              <p class="font-semibold">Indian Masala</p>
+              <p>Chana Masala, Dal, Aloo Gobi + Tandoori Roti.</p>
+            </div>
+            <div class="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+              <p class="font-semibold">El Furniture Warehouse</p>
+              <p>General Tao Bowl OR Veggie Burger (Lettuce Wrap, No Mayo).</p>
+            </div>
+            <div class="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+              <p class="font-semibold">Cloudburst Cafe</p>
+              <p>Quinoa Veggie Burger (Fully Vegan/Safe).</p>
+            </div>
+          </div>
+        </section>
+
         
-        <div class="flex text-sm font-medium border-t border-slate-700">
-            <button onclick="switchDay(0)" id="btn-day1" class="flex-1 py-3 text-center bg-slate-700 text-white border-b-4 border-sky-blue transition">Day 1: Tue</button>
-            <button onclick="switchDay(1)" id="btn-day2" class="flex-1 py-3 text-center bg-mountain-dark text-gray-400 border-b-4 border-transparent transition">Day 2: Wed</button>
-        </div>
-    </header>
-
-    <main class="max-w-2xl mx-auto px-4 mt-4">
-
-        <div class="bg-red-50 border-l-4 border-alert-red p-4 mb-6 rounded shadow-sm">
-            <h3 class="font-bold text-red-800 text-sm flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                Non-Negotiables
-            </h3>
-            <ul class="list-disc list-inside text-xs text-red-700 mt-2 space-y-1">
-                <li><strong>Tires:</strong> M+S or Mountain Snowflake mandatory.</li>
-                <li><strong>Bridge Logic:</strong> Leave 7 AM sharp (Day 1) & 6:30 PM (Day 2).</li>
-                <li><strong>Diet:</strong> STRICT VEGETARIAN (No Egg).</li>
-            </ul>
-        </div>
-
-        <div id="geo-status" class="hidden mb-4 p-3 bg-sky-100 text-sky-800 rounded text-sm text-center font-medium border border-sky-200"></div>
-
-        <div id="timeline-container" class="space-y-6 relative border-l-2 border-gray-200 ml-3 pl-6 pb-4">
-            </div>
-
-        <div class="mt-8 bg-white p-6 rounded-lg shadow border border-gray-100">
-            <h3 class="font-bold text-gray-800 mb-3">💰 Budget Target</h3>
-            <div class="flex justify-between items-end border-b pb-2 mb-2">
-                <span class="text-sm text-gray-500">Per Person</span>
-                <span class="font-bold text-xl text-forest-green">$200 - $250 CAD</span>
-            </div>
-            <p class="text-xs text-gray-400">Includes Gas, Shared Lodging, Family-Style Food, Parking.</p>
-        </div>
-    </main>
+      </main>
+    </div>
 
     <script>
-        // ==========================================
-        // 1. ITINERARY DATA (JSON CONFIG)
-        // Edit this section to update the app.
-        // ==========================================
-        const itinerary = [
-            {
-                day: "Day 1: Waterfalls & Curry",
-                date: "Tuesday, Feb 17",
-                stops: [
-                    {
-                        time: "07:00 AM",
-                        title: "Depart Surrey",
-                        location: "Tim Hortons (Surrey)",
-                        coords: { lat: 49.1044, lng: -122.8011 }, // Example Surrey coords
-                        type: "logistics",
-                        notes: "Departure is strict to beat bridge traffic.",
-                        dietary: {
-                            safe: true,
-                            rec: "Bagel w/ Peanut Butter OR Oatmeal.",
-                            warn: "No Breakfast Sandwiches (Egg)."
-                        },
-                        linkQuery: "Tim Hortons Surrey"
-                    },
-                    {
-                        time: "08:15 AM",
-                        title: "Porteau Cove",
-                        location: "Porteau Cove Provincial Park",
-                        coords: { lat: 49.5604, lng: -123.2346 },
-                        type: "activity",
-                        notes: "30 min stop. Walk the pier, look for seals.",
-                        linkQuery: "Porteau Cove Provincial Park"
-                    },
-                    {
-                        time: "09:00 AM",
-                        title: "Shannon Falls",
-                        location: "Shannon Falls Provincial Park",
-                        coords: { lat: 49.6715, lng: -123.1569 },
-                        type: "activity",
-                        notes: "20 min stop. Low effort, high reward waterfall.",
-                        linkQuery: "Shannon Falls Provincial Park"
-                    },
-                    {
-                        time: "10:00 AM",
-                        title: "Hike: Murrin Park",
-                        location: "Murrin Provincial Park",
-                        coords: { lat: 49.6389, lng: -123.2125 },
-                        type: "activity",
-                        notes: "Hike to Quercus Viewpoint. Wear boots (muddy).",
-                        linkQuery: "Murrin Provincial Park"
-                    },
-                    {
-                        time: "12:30 PM",
-                        title: "Lunch: Sunny Chibas",
-                        location: "Sunny Chibas Fried Chicken Mexican Cantina",
-                        coords: { lat: 49.7289, lng: -123.1465 },
-                        type: "food",
-                        notes: "Legendary Mexican food. Ask to sub cheese for extra guac.",
-                        dietary: {
-                            safe: true,
-                            rec: "Vegan Taco/Burrito (Bean filling, Pico, Guac).",
-                            warn: "Avoid standard mayo/slaw if unsure."
-                        },
-                        linkQuery: "Sunny Chibas Squamish"
-                    },
-                    {
-                        time: "02:00 PM",
-                        title: "Afternoon Adventure",
-                        location: "Alice Lake OR Tantalus Lookout",
-                        coords: { lat: 49.7749, lng: -123.1256 },
-                        type: "activity",
-                        notes: "Option A: Alice Lake Loop (Forest). Option B: Tantalus (Viewpoint drive).",
-                        linkQuery: "Alice Lake Provincial Park"
-                    },
-                    {
-                        time: "06:00 PM",
-                        title: "Dinner: Indian Masala",
-                        location: "Indian Masala Bar & Grill",
-                        coords: { lat: 49.7016, lng: -123.1558 },
-                        type: "food",
-                        notes: "Order Family Style to save cash. Best value.",
-                        dietary: {
-                            safe: true,
-                            rec: "Chana Masala, Dal Makhani, Aloo Gobi, Tandoori Roti.",
-                            warn: "Naan might have egg (ask). Roti is safe."
-                        },
-                        linkQuery: "Indian Masala Bar & Grill Squamish"
-                    },
-                    {
-                        time: "08:00 PM",
-                        title: "Lodging Check-In",
-                        location: "Squamish Adventure Inn",
-                        coords: { lat: 49.6976, lng: -123.1610 },
-                        type: "logistics",
-                        notes: "Has a kitchen for late-night chai.",
-                        linkQuery: "Squamish Adventure Inn"
-                    }
-                ]
-            },
-            {
-                day: "Day 2: Whistler & The Exit Strategy",
-                date: "Wednesday, Feb 18",
-                stops: [
-                    {
-                        time: "08:30 AM",
-                        title: "Drive to Whistler",
-                        location: "Whistler Day Lot 4",
-                        coords: { lat: 50.1163, lng: -122.9574 },
-                        type: "logistics",
-                        notes: "Target Lot 4 or 5 ($10/day). Expensive parking closer in.",
-                        linkQuery: "Whistler Day Lot 4"
-                    },
-                    {
-                        time: "10:00 AM",
-                        title: "Village & Train Wreck",
-                        location: "Whistler Train Wreck",
-                        coords: { lat: 50.0833, lng: -122.9833 },
-                        type: "activity",
-                        notes: "Village Stroll first, then Train Wreck suspension bridge hike.",
-                        linkQuery: "Whistler Train Wreck trailhead"
-                    },
-                    {
-                        time: "01:00 PM",
-                        title: "Lunch: Warehouse",
-                        location: "El Furniture Warehouse",
-                        coords: { lat: 50.1150, lng: -122.9550 },
-                        type: "food",
-                        notes: "Everything is cheap (~$10-15).",
-                        dietary: {
-                            safe: true,
-                            rec: "General Tao Bowl (verify breading) OR Veggie Burger.",
-                            warn: "Veggie Burger: Lettuce Wrap + NO Mayo (Bun has egg wash)."
-                        },
-                        linkQuery: "El Furniture Warehouse Whistler"
-                    },
-                    {
-                        time: "03:00 PM",
-                        title: "Secret Waterfall",
-                        location: "Whistler Bungee Bridge",
-                        coords: { lat: 50.0683, lng: -123.0645 },
-                        type: "activity",
-                        notes: "The Hack: Park at Bungee Bridge, walk across to see Brandywine Falls.",
-                        linkQuery: "Whistler Bungee Bridge"
-                    },
-                    {
-                        time: "04:30 PM",
-                        title: "Traffic Kill Strategy",
-                        location: "Cloudburst Cafe / Squamish Dyke",
-                        coords: { lat: 49.7891, lng: -123.1437 },
-                        type: "logistics",
-                        notes: "DO NOT drive to Surrey yet. Wait until 6:30 PM.",
-                        dietary: {
-                            safe: true,
-                            rec: "Egg-free cookies available.",
-                            warn: ""
-                        },
-                        linkQuery: "Cloudburst Cafe Squamish"
-                    },
-                    {
-                        time: "06:30 PM",
-                        title: "Drive Home",
-                        location: "Surrey",
-                        coords: { lat: 49.1044, lng: -122.8011 },
-                        type: "logistics",
-                        notes: "Smooth sailing after the rush hour.",
-                        linkQuery: "Surrey BC"
-                    }
-                ]
-            }
-        ];
+      const itinerary = [
+        {
+          id: "d1-launch",
+          day: "Day 1 • Tuesday",
+          time: "7:00 AM",
+          title: "Surrey → Sea-to-Sky Launch",
+          type: "logistics",
+          summary: "Depart from Surrey early to beat bridge traffic and catch sunrise views.",
+          notes: [
+            "Bridge Logic: leave at 7:00 AM to miss the rush.",
+            "Coffee Stop: Tim Hortons.",
+          ],
+          coords: { lat: 49.1044, lng: -122.8011 },
+        },
+        {
+          id: "d1-coffee",
+          day: "Day 1 • Tuesday",
+          time: "Morning",
+          title: "Tim Hortons (Coffee Stop)",
+          type: "food",
+          summary: "Quick fuel before the scenery begins.",
+          eggFree: [
+            "Bagel with Peanut Butter (or Cream Cheese).",
+            "Oatmeal.",
+          ],
+          coords: { lat: 49.1892, lng: -122.8457 },
+        },
+        {
+          id: "d1-porteau",
+          day: "Day 1 • Tuesday",
+          time: "AM",
+          title: "Porteau Cove",
+          type: "activity",
+          summary: "Walk the pier, spot seals, capture golden-hour photos.",
+          notes: ["30-minute stop."],
+          coords: { lat: 49.5513, lng: -123.2412 },
+        },
+        {
+          id: "d1-shannon",
+          day: "Day 1 • Tuesday",
+          time: "AM",
+          title: "Shannon Falls",
+          type: "activity",
+          summary: "Massive waterfall right off the highway. Low effort, high reward.",
+          notes: ["20-minute stop."],
+          coords: { lat: 49.7113, lng: -123.1576 },
+        },
+        {
+          id: "d1-murrin",
+          day: "Day 1 • Tuesday",
+          time: "Late AM",
+          title: "Murrin Park Loop → Quercus Viewpoint",
+          type: "activity",
+          summary: "Shorter than the Chief with epic Howe Sound views.",
+          notes: ["Wear boots (muddy) and bring layers."],
+          coords: { lat: 49.6743, lng: -123.2074 },
+        },
+        {
+          id: "d1-lunch",
+          day: "Day 1 • Tuesday",
+          time: "Lunch",
+          title: "Sunny Chibas (Squamish)",
+          type: "food",
+          summary: "Legendary Mexican comfort food with vegan options.",
+          eggFree: [
+            "Vegan taco/burrito with bean filling, pico de gallo, guacamole.",
+            "Ask to sub cheese for extra guacamole (often free).",
+          ],
+          coords: { lat: 49.6994, lng: -123.1552 },
+        },
+        {
+          id: "d1-afternoon",
+          day: "Day 1 • Tuesday",
+          time: "Afternoon",
+          title: "Choose Your Own Adventure",
+          type: "activity",
+          summary: "Pick based on energy levels.",
+          notes: [
+            "Option A: Alice Lake → Stump Lake loop (quiet forest vibes).",
+            "Option B: Tantalus Lookout (roadside glacier views).",
+          ],
+          coords: { lat: 49.7644, lng: -123.1532 },
+        },
+        {
+          id: "d1-dinner",
+          day: "Day 1 • Tuesday",
+          time: "Dinner",
+          title: "Indian Masala Bar & Grill (Squamish)",
+          type: "food",
+          summary: "Family-style Indian dinner to save cash.",
+          eggFree: [
+            "Chana Masala (chickpeas), Dal Makhani (lentils), Aloo Gobi (cauliflower).",
+            "Breads: Tandoori Roti (safest/vegan). Ask if naan dough has egg just in case.",
+          ],
+          coords: { lat: 49.7014, lng: -123.1562 },
+        },
+        {
+          id: "d1-lodging",
+          day: "Day 1 • Tuesday",
+          time: "Evening",
+          title: "Base Camp Lodging",
+          type: "logistics",
+          summary: "Pick the vibe for the night.",
+          notes: [
+            "Option 1 (Party): Crash Hotel Party Room.",
+            "Option 2 (Chill/Budget): Squamish Adventure Inn Family Room (kitchen for late-night chai).",
+          ],
+          coords: { lat: 49.7017, lng: -123.1556 },
+        },
+        {
+          id: "d2-start",
+          day: "Day 2 • Wednesday",
+          time: "8:30 AM",
+          title: "Squamish → Whistler Morning Run",
+          type: "logistics",
+          summary: "Leave Squamish around 8:30 AM for Whistler.",
+          notes: ["Parking: Day Lot 4 or 5 (cheapest ~ $10/day)."],
+          coords: { lat: 50.1163, lng: -122.9574 },
+        },
+        {
+          id: "d2-village",
+          day: "Day 2 • Wednesday",
+          time: "Morning",
+          title: "Whistler Village Flex",
+          type: "activity",
+          summary: "Walk the Village Stroll, check Olympic Rings plaza.",
+          notes: ["Side Quest: Train Wreck Hike (suspension bridge + graffiti cars)."],
+          coords: { lat: 50.1163, lng: -122.9574 },
+        },
+        {
+          id: "d2-lunch",
+          day: "Day 2 • Wednesday",
+          time: "Lunch",
+          title: "El Furniture Warehouse (Whistler)",
+          type: "food",
+          summary: "Everything ~$10–$15. Best value in Whistler.",
+          eggFree: [
+            "General Tao Bowl (verify breading is egg-free).",
+            "Veggie Burger: Lettuce Wrap, NO Mayo.",
+          ],
+          notes: [
+            "Alternative: Tandoori Grill or Royal Taste of India (higher cost).",
+          ],
+          coords: { lat: 50.1142, lng: -122.9577 },
+        },
+        {
+          id: "d2-brandywine",
+          day: "Day 2 • Wednesday",
+          time: "Afternoon",
+          title: "Brandywine Falls (Secret Hack)",
+          type: "logistics",
+          summary: "Main parking gate often closed in winter.",
+          notes: [
+            "Do not park on the highway.",
+            "Hack: Drive to Whistler Bungee Bridge and hike to the falls from the other side.",
+          ],
+          coords: { lat: 50.0469, lng: -123.0788 },
+        },
+        {
+          id: "d2-traffic",
+          day: "Day 2 • Wednesday",
+          time: "Late Afternoon",
+          title: "Traffic Kill Strategy",
+          type: "logistics",
+          summary: "Avoid the Ironworkers bridge traffic wall.",
+          notes: [
+            "Stop in Squamish: Coffee/treat at Cloudburst Cafe (vegan/egg-free cookies).",
+            "Or walk the Squamish Dyke for sunset.",
+            "Drive home around 6:30 PM for smooth sailing.",
+          ],
+          coords: { lat: 49.7016, lng: -123.1553 },
+        },
+      ];
 
-        // ==========================================
-        // 2. APP LOGIC
-        // ==========================================
+      const timelineEl = document.getElementById("timeline");
+      const findUsBtn = document.getElementById("findUsBtn");
+      const locationOutput = document.getElementById("locationOutput");
+      const resetProgressBtn = document.getElementById("resetProgress");
+      const storageKey = "trip-progress";
 
-        // Render the itinerary
-        function switchDay(dayIndex) {
-            const container = document.getElementById('timeline-container');
-            const data = itinerary[dayIndex];
-            
-            // Toggle Tab Styles
-            const btn1 = document.getElementById('btn-day1');
-            const btn2 = document.getElementById('btn-day2');
-            
-            if(dayIndex === 0) {
-                btn1.classList.replace('bg-mountain-dark', 'bg-slate-700');
-                btn1.classList.replace('border-transparent', 'border-sky-blue');
-                btn1.classList.replace('text-gray-400', 'text-white');
-                
-                btn2.classList.replace('bg-slate-700', 'bg-mountain-dark');
-                btn2.classList.replace('border-sky-blue', 'border-transparent');
-                btn2.classList.replace('text-white', 'text-gray-400');
-            } else {
-                btn2.classList.replace('bg-mountain-dark', 'bg-slate-700');
-                btn2.classList.replace('border-transparent', 'border-sky-blue');
-                btn2.classList.replace('text-gray-400', 'text-white');
-                
-                btn1.classList.replace('bg-slate-700', 'bg-mountain-dark');
-                btn1.classList.replace('border-sky-blue', 'border-transparent');
-                btn1.classList.replace('text-white', 'text-gray-400');
-            }
+      const groupByDay = itinerary.reduce((acc, item) => {
+        acc[item.day] = acc[item.day] || [];
+        acc[item.day].push(item);
+        return acc;
+      }, {});
 
-            // Build HTML
-            let html = '';
-            
-            data.stops.forEach(stop => {
-                const isFood = stop.type === 'food';
-                const isAlert = stop.type === 'logistics' && stop.notes.includes('Strict');
-                
-                let icon = '';
-                if(stop.type === 'food') icon = '🍔';
-                else if(stop.type === 'activity') icon = '🏔️';
-                else icon = '🚗';
-
-                // Deep Links
-                const navLink = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(stop.linkQuery)}`;
-                const reviewLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stop.linkQuery)}`;
-
-                html += `
-                <div class="relative pl-2">
-                    <div class="absolute -left-[33px] top-1 h-6 w-6 rounded-full border-4 border-white ${isFood ? 'bg-forest-green' : 'bg-sky-blue'} shadow-sm flex items-center justify-center text-xs">
-                    </div>
-                    
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
-                        <div class="flex justify-between items-start mb-1">
-                            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase ${isFood ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}">
-                                ${stop.time}
-                            </span>
-                            <span class="text-lg">${icon}</span>
-                        </div>
-                        
-                        <h3 class="font-bold text-gray-800 text-lg leading-tight mb-1">${stop.title}</h3>
-                        <p class="text-sm text-gray-500 mb-3">${stop.location}</p>
-                        
-                        <p class="text-sm text-gray-700 mb-3 italic">"${stop.notes}"</p>
-
-                        ${stop.dietary ? `
-                        <div class="bg-safe-green border border-green-200 rounded p-3 mb-3">
-                            <div class="flex items-center mb-1">
-                                <svg class="w-4 h-4 text-green-700 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                                <span class="text-xs font-bold text-green-800 uppercase">Egg-Free Order</span>
-                            </div>
-                            <p class="text-sm text-gray-800 font-medium">${stop.dietary.rec}</p>
-                            ${stop.dietary.warn ? `<p class="text-xs text-red-600 mt-1">⚠️ ${stop.dietary.warn}</p>` : ''}
-                        </div>
-                        ` : ''}
-
-                        <div class="flex gap-2 mt-4">
-                            <a href="${navLink}" target="_blank" class="flex-1 bg-sky-blue hover:bg-sky-600 text-white text-center py-2 rounded text-sm font-semibold shadow-sm transition">
-                                Navigate ↗
-                            </a>
-                            <a href="${reviewLink}" target="_blank" class="flex-1 bg-white hover:bg-gray-50 text-slate-600 border border-slate-300 text-center py-2 rounded text-sm font-semibold transition">
-                                Check Traffic
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                `;
-            });
-
-            container.innerHTML = html;
+      const loadProgress = () => {
+        try {
+          const saved = JSON.parse(localStorage.getItem(storageKey));
+          return saved && typeof saved.currentIndex === "number" ? saved.currentIndex : 0;
+        } catch (error) {
+          return 0;
         }
+      };
 
-        // ==========================================
-        // 3. GEOLOCATION (HAVERSINE FORMULA)
-        // ==========================================
-        function findNearestStop() {
-            const statusDiv = document.getElementById('geo-status');
-            statusDiv.classList.remove('hidden');
-            statusDiv.innerHTML = "Locating you...";
+      const saveProgress = (index) => {
+        localStorage.setItem(storageKey, JSON.stringify({ currentIndex: index }));
+      };
 
-            if (!navigator.geolocation) {
-                statusDiv.innerHTML = "Geolocation is not supported by your browser.";
-                return;
-            }
+      let currentIndex = loadProgress();
 
-            navigator.geolocation.getCurrentPosition((position) => {
-                const userLat = position.coords.latitude;
-                const userLng = position.coords.longitude;
+      const getNextStop = () => itinerary.find((item, index) => index >= currentIndex && item.coords);
 
-                // Flatten all stops into one array for searching
-                const allStops = [...itinerary[0].stops, ...itinerary[1].stops];
-                
-                let nearest = null;
-                let minDist = Infinity;
+      const formatDistance = (km) => {
+        if (km < 1) return `${Math.round(km * 1000)} m`;
+        if (km < 10) return `${km.toFixed(1)} km`;
+        return `${Math.round(km)} km`;
+      };
 
-                allStops.forEach(stop => {
-                    if (stop.coords) {
-                        const dist = getDistanceFromLatLonInKm(userLat, userLng, stop.coords.lat, stop.coords.lng);
-                        if (dist < minDist) {
-                            minDist = dist;
-                            nearest = stop;
-                        }
-                    }
-                });
+      const getDistanceKm = (lat1, lon1, lat2, lon2) => {
+        const toRad = (value) => (value * Math.PI) / 180;
+        const radius = 6371;
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+          Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return radius * c;
+      };
 
-                if (nearest) {
-                    statusDiv.innerHTML = `
-                        📍 You are <strong>${minDist.toFixed(1)} km</strong> from 
-                        <br><span class="font-bold text-sky-700">${nearest.title}</span>.
-                    `;
-                }
-            }, () => {
-                statusDiv.innerHTML = "Unable to retrieve your location. Check permissions.";
-            });
-        }
+      const buildStopCard = (stop, index) => {
+        const isComplete = index < currentIndex;
+        const card = document.createElement("article");
+        card.className = `rounded-3xl border ${isComplete ? "border-emerald-500/40 bg-emerald-500/10" : "border-slate-800 bg-slate-900/60"} p-5`;
 
-        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Radius of the earth in km
-            const dLat = deg2rad(lat2 - lat1);
-            const dLon = deg2rad(lon2 - lon1);
-            const a =
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
-        }
-
-        function deg2rad(deg) {
-            return deg * (Math.PI / 180);
-        }
-
-        // Initialize App
-        window.onload = () => {
-            switchDay(0); // Load Day 1 by default
+        const badgeClass = {
+          food: "bg-amber-500/15 text-amber-300",
+          activity: "bg-sky-500/15 text-sky-300",
+          logistics: "bg-rose-500/15 text-rose-300",
         };
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400">${stop.time}</p>
+              <h3 class="mt-1 text-lg font-semibold">${stop.title}</h3>
+            </div>
+            <span class="rounded-full px-3 py-1 text-xs font-semibold ${badgeClass[stop.type] || "bg-slate-700/40 text-slate-200"}">${stop.type}</span>
+          </div>
+          <p class="mt-3 text-sm text-slate-200">${stop.summary}</p>
+        `;
+
+        if (stop.notes) {
+          const notes = document.createElement("ul");
+          notes.className = "mt-3 space-y-2 text-sm text-slate-200";
+          stop.notes.forEach((note) => {
+            const li = document.createElement("li");
+            li.className = "flex items-start gap-2";
+            li.innerHTML = `<span class="text-slate-400">•</span><span>${note}</span>`;
+            notes.appendChild(li);
+          });
+          card.appendChild(notes);
+        }
+
+        if (stop.eggFree) {
+          const alert = document.createElement("div");
+          alert.className = "mt-4 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-100";
+          alert.innerHTML = `
+            <div class="flex items-center gap-2 font-semibold">
+              <span>🌿</span>
+              <span>Egg-Free Order</span>
+            </div>
+          `;
+          const list = document.createElement("ul");
+          list.className = "mt-2 space-y-1";
+          stop.eggFree.forEach((item) => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            list.appendChild(li);
+          });
+          alert.appendChild(list);
+          card.appendChild(alert);
+        }
+
+        if (stop.coords) {
+          const actions = document.createElement("div");
+          actions.className = "mt-4 grid gap-2 sm:grid-cols-2";
+          const destination = `${stop.coords.lat},${stop.coords.lng}`;
+          actions.innerHTML = `
+            <a class="rounded-2xl bg-slate-800 px-4 py-3 text-center text-sm font-semibold" href="https://www.google.com/maps/dir/?api=1&destination=${destination}" target="_blank" rel="noopener">Navigate</a>
+            <a class="rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-center text-sm font-semibold" href="https://www.google.com/maps/search/?api=1&query=${destination}" target="_blank" rel="noopener">Reviews/Traffic</a>
+          `;
+          card.appendChild(actions);
+        }
+
+        const progressWrap = document.createElement("div");
+        progressWrap.className = "mt-4 flex items-center justify-between text-xs text-slate-400";
+        progressWrap.innerHTML = `<span>${isComplete ? "✅ Completed" : "Next up"}</span>`;
+
+        if (!isComplete) {
+          const doneBtn = document.createElement("button");
+          doneBtn.className = "rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-200";
+          doneBtn.textContent = "Mark done";
+          doneBtn.addEventListener("click", () => {
+            currentIndex = Math.min(currentIndex + 1, itinerary.length);
+            saveProgress(currentIndex);
+            renderTimeline();
+          });
+          progressWrap.appendChild(doneBtn);
+        }
+
+        card.appendChild(progressWrap);
+        return card;
+      };
+
+      const renderTimeline = () => {
+        timelineEl.innerHTML = "";
+        Object.entries(groupByDay).forEach(([day, stops]) => {
+          const section = document.createElement("section");
+          section.className = "space-y-4";
+          const heading = document.createElement("h3");
+          heading.className = "text-lg font-semibold text-slate-100";
+          heading.textContent = day;
+          section.appendChild(heading);
+          stops.forEach((stop) => {
+            const index = itinerary.findIndex((item) => item.id === stop.id);
+            section.appendChild(buildStopCard(stop, index));
+          });
+          timelineEl.appendChild(section);
+        });
+      };
+
+      const updateLocationOutput = (content) => {
+        locationOutput.innerHTML = content;
+      };
+
+      const handleFindUs = () => {
+        if (!navigator.geolocation) {
+          updateLocationOutput("<p>Your browser does not support geolocation.</p>");
+          return;
+        }
+
+        updateLocationOutput("<p>Locating…</p>");
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            const nextStop = getNextStop();
+            let distanceBlock = "";
+            if (nextStop) {
+              const distanceKm = getDistanceKm(latitude, longitude, nextStop.coords.lat, nextStop.coords.lng);
+              distanceBlock = `
+                <div class="mt-2 rounded-xl border border-slate-800 bg-slate-950/70 p-3">
+                  <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Next Stop</p>
+                  <p class="text-sm font-semibold">${nextStop.title}</p>
+                  <p class="text-sm text-slate-300">~${formatDistance(distanceKm)} away</p>
+                </div>
+              `;
+            }
+
+            updateLocationOutput(`
+              <p class="text-sm">Lat: ${latitude.toFixed(5)}, Lng: ${longitude.toFixed(5)}</p>
+              ${distanceBlock}
+            `);
+          },
+          () => {
+            updateLocationOutput("<p>Unable to access location. Please allow location access.</p>");
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      };
+
+      findUsBtn.addEventListener("click", handleFindUs);
+
+      resetProgressBtn.addEventListener("click", () => {
+        currentIndex = 0;
+        saveProgress(currentIndex);
+        renderTimeline();
+      });
+
+      renderTimeline();
     </script>
-</body>
+  </body>
 </html>
